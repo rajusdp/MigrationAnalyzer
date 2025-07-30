@@ -1,0 +1,52 @@
+{
+  "name": "migration-estimator-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend for Slack-to-Teams Migration Estimator",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "next": "14.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@reduxjs/toolkit": "2.0.1",
+    "react-redux": "9.0.4",
+    "react-hook-form": "7.48.2",
+    "@hookform/resolvers": "3.3.2",
+    "zod": "3.22.4",
+    "recharts": "2.8.0",
+    "react-dropzone": "14.2.3",
+    "@headlessui/react": "1.7.17",
+    "@heroicons/react": "2.0.18",
+    "@azure/msal-browser": "3.6.0",
+    "@azure/msal-react": "2.0.9",
+    "axios": "1.6.2",
+    "clsx": "2.0.0",
+    "tailwind-merge": "2.1.0",
+    "date-fns": "2.30.0",
+    "react-hot-toast": "2.4.1"
+  },
+  "devDependencies": {
+    "typescript": "5.3.3",
+    "@types/node": "20.10.5",
+    "@types/react": "18.2.45",
+    "@types/react-dom": "18.2.18",
+    "tailwindcss": "3.3.6",
+    "autoprefixer": "10.4.16",
+    "postcss": "8.4.32",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.0.4",
+    "@testing-library/react": "14.1.2",
+    "@testing-library/jest-dom": "6.1.5",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "29.7.0"
+  }
+}

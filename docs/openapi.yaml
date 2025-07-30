@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  title: Slack-to-Teams Migration Estimator API
+  version: 1.0.0
+  description: API for migration cost/effort estimation, submissions, PDF generation, user management, and audit logging.
+paths:
+  /api/estimate:
+    post:
+      summary: Calculate cost and effort estimates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionRequest'
+      responses:
+        '200':
+          description: Estimate response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstimateResponse'
+  /api/submissions:
+    get:
+      summary: Get submissions based on user role
+      responses:
+        '200':
+          description: List of submissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubmissionResponse'
+  /api/submissions/{submission_id}/pdf:
+    post:
+      summary: Generate and return PDF report
+      parameters:
+        - name: submission_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: PDF response
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+  /api/users:
+    get:
+      summary: Admin: Get all users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /api/audit:
+    post:
+      summary: Log audit events for compliance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditEvent'
+      responses:
+        '204':
+          description: No content
+components:
+  schemas:
+    SubmissionRequest:
+      type: object
+      properties:
+        customer_info:
+          $ref: '#/components/schemas/CustomerInfo'
+        technical_details:
+          $ref: '#/components/schemas/TechnicalDetails'
+    CustomerInfo:
+      type: object
+      properties:
+        companyName:
+          type: string
+        contactName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        projectLead:
+          type: string
+        itContact:
+          type: string
+        roughBudget:
+          type: number
+        idealTimeline:
+          type: string
+          format: date
+        otherStakeholders:
+          type: string
+          enum: [yes, no]
+        stakeholderContacts:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+              title:
+                type: string
+              phone:
+                type: string
+        slackRenewal:
+          type: string
+        slackCancellation:
+          type: string
+        totalLicenses:
+          type: number
+        collaborationScope:
+          type: string
+          enum: [Internal only, External via Slack Connect, Both]
+        supportExternalUsecases:
+          type: string
+          enum: [Support in Teams, Continue Slack]
+        otherCollabTools:
+          type: array
+          items:
+            type: string
+            enum: [Teams, Zoom, Jira, Confluence]
+    TechnicalDetails:
+      type: object
+      properties:
+        adIntegration:
+          type: string
+          enum: [yes, no]
+        o365UserAssumption:
+          type: string
+          enum: [yes, no]
+        analyticsReport:
+          type: string
+          format: binary
+        messageVolume:
+          type: number
+        migrationCriteria:
+          type: string
+        installedApps:
+          type: string
+        customApps:
+          type: array
+          items:
+            type: string
+            enum: [Bots, Dialogs, Slash Commands, None]
+        customAppDetails:
+          type: string
+        thirdPartyApps:
+          type: array
+          items:
+            type: string
+            enum: [Dropbox, Polly, Zendesk, None]
+        thirdPartyAppDetails:
+          type: string
+        integrations:
+          type: string
+        governancePolicy:
+          type: string
+        contentRestrictions:
+          type: string
+        enterpriseSearch:
+          type: string
+        usagePattern:
+          type: string
+        o365CurrentUsage:
+          type: string
+          enum: [E1, E3, E5, F1, F3, Business Basic, Business Standard, Business Premium, None]
+        slackCanvasUsage:
+          type: string
+        slackListsUsage:
+          type: string
+    EstimateResponse:
+      type: object
+      properties:
+        cost:
+          type: number
+        effort_weeks:
+          type: number
+        timeline_weeks:
+          type: number
+        breakdown:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+    SubmissionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+        cost:
+          type: number
+        effort_weeks:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        role:
+          type: string
+        b2c_object_id:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    AuditEvent:
+      type: object
+      properties:
+        actor_id:
+          type: integer
+        entity:
+          type: string
+        action:
+          type: string
+        diff:
+          type: object

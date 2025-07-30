@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: migration-estimator
+metadata:
+  template: migration-estimator@0.0.1-beta
+services:
+  backend:
+    project: ./backend
+    language: python
+    host: appservice
+    hooks:
+      predeploy:
+        shell: sh
+        run: |
+          echo "Installing dependencies..."
+          pip install -r requirements.txt
+          echo "Running database migrations..."
+          python -m alembic upgrade head
+        continueOnError: false
+        interactive: false
+  frontend:
+    project: ./frontend
+    language: js
+    host: appservice
+    hooks:
+      predeploy:
+        shell: sh
+        run: |
+          echo "Installing dependencies..."
+          npm ci
+          echo "Building application..."
+          npm run build
+        continueOnError: false
+        interactive: false
+
+hooks:
+  preprovision:
+    shell: sh
+    run: |
+      echo "Validating Azure subscription and permissions..."
+      
+  postprovision:
+    shell: sh
+    run: |
+      echo "Setting up initial data and configuration..."
+      echo "Creating default admin user..."
+      
+  predown:
+    shell: sh
+    run: |
+      echo "Backing up critical data before teardown..."
